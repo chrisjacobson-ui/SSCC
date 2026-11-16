@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trip Management — Containers — Deposco</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 13px;
+            background: #f0f0f4;
+            color: #2d2d3a;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        /* ── Topbar ── */
+        .topbar {
+            position: sticky; top: 0; z-index: 300;
+            background: #252530;
+            height: 44px;
+            display: flex; align-items: center;
+            padding: 0 .75rem;
+            gap: .75rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,.35);
+        }
+        .topbar-hamburger { color: rgba(255,255,255,.6); font-size: .95rem; cursor: pointer; padding: .25rem; }
+        .topbar-brand { display: flex; align-items: center; gap: .4rem; text-decoration: none; }
+        .topbar-brand .logo-mark {
+            width: 24px; height: 24px;
+            background: #f08020; border-radius: 3px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 900; font-size: .7rem; color: white; letter-spacing: -.5px;
+        }
+        .topbar-brand .logo-text { font-size: .82rem; font-weight: 700; color: white; letter-spacing: .08em; text-transform: uppercase; }
+        .topbar-search {
+            flex: 1; max-width: 500px;
+            background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.12);
+            border-radius: 4px; padding: .3rem .75rem;
+            color: rgba(255,255,255,.85); font-size: .8rem; outline: none;
+        }
+        .topbar-search::placeholder { color: rgba(255,255,255,.4); }
+        .topbar-icons { margin-left: auto; display: flex; align-items: center; gap: .85rem; }
+        .topbar-icons i { color: rgba(255,255,255,.6); font-size: .9rem; cursor: pointer; }
+
+        /* ── Layout ── */
+        .app-layout { display: flex; min-height: calc(100vh - 44px); }
+
+        /* ── Sidebar ── */
+        .sidebar { width: 190px; flex-shrink: 0; background: #2a2a38; padding: .5rem 0; overflow-y: auto; }
+        .sidebar-section-label { font-size: .6rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.3); padding: .6rem .85rem .25rem; }
+        .sidebar-item {
+            display: flex; align-items: center; gap: .55rem;
+            padding: .42rem .85rem;
+            color: rgba(255,255,255,.65);
+            text-decoration: none; font-size: .78rem; font-weight: 500;
+            cursor: pointer;
+        }
+        .sidebar-item:hover { color: white; background: rgba(255,255,255,.05); }
+        .sidebar-item.active { color: #f08020; background: rgba(240,128,32,.08); }
+        .sidebar-item i { width: 13px; text-align: center; font-size: .78rem; flex-shrink: 0; }
+        .sidebar-divider { height: 1px; background: rgba(255,255,255,.07); margin: .3rem 0; }
+
+        /* ── Main ── */
+        .main { flex: 1; overflow-x: hidden; display: flex; flex-direction: column; }
+
+        /* ── Page chrome ── */
+        .page-chrome { background: white; border-bottom: 1px solid #e0e0ea; padding: .5rem 1.25rem .6rem; }
+        .breadcrumb { font-size: .72rem; color: #9090a8; margin-bottom: .25rem; }
+        .breadcrumb a { color: #9090a8; text-decoration: none; }
+        .breadcrumb a:hover { color: #f08020; }
+        .page-title-row { display: flex; align-items: center; gap: .75rem; }
+        .page-title { font-size: 1.15rem; font-weight: 700; color: #1e1e2a; }
+        .page-title-meta { font-size: .72rem; color: #9090a8; }
+        .page-chrome-actions { margin-left: auto; display: flex; gap: .5rem; }
+        .badge-planned { display: inline-flex; align-items: center; padding: .15rem .5rem; border-radius: 10px; font-size: .68rem; font-weight: 700; background: #fff3e0; color: #c06010; border: 1px solid #f0c080; text-transform: uppercase; letter-spacing: .04em; }
+
+        /* ── Trip Overview ── */
+        .trip-overview { background: white; padding: .75rem 1.25rem; border-bottom: 1px solid #e0e0ea; }
+        .trip-overview-title { font-size: .62rem; font-weight: 700; color: #9090a8; text-transform: uppercase; letter-spacing: .05em; margin-bottom: .5rem; }
+        .fields-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: .5rem 1.5rem; }
+        .field-block { display: flex; flex-direction: column; gap: .1rem; }
+        .field-label { font-size: .68rem; color: #9090a8; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+        .field-value { font-size: .8rem; color: #2d2d3a; font-weight: 500; min-height: 1.1rem; }
+        .field-value.empty { color: #c0c0d0; }
+
+        /* ── Tabs ── */
+        .tabs-bar { background: white; border-bottom: 2px solid #e0e0ea; padding: 0 1.25rem; display: flex; gap: 0; }
+        .tab {
+            padding: .6rem 1rem .55rem;
+            font-size: .78rem; font-weight: 600; color: #9090a8;
+            cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px;
+            white-space: nowrap;
+        }
+        .tab:hover { color: #4a4a5a; }
+        .tab.active { color: #f08020; border-bottom-color: #f08020; }
+
+        /* ── Content area ── */
+        .content-area { padding: 1rem 1.25rem; flex: 1; }
+
+        /* ── Section header ── */
+        .section-header { display: flex; align-items: center; gap: .5rem; margin-bottom: .65rem; }
+        .section-title { font-size: .9rem; font-weight: 700; color: #1e1e2a; }
+
+
+        /* ── Toolbar ── */
+        .table-toolbar {
+            display: flex; align-items: center; gap: .4rem;
+            background: white; border: 1px solid #e0e0ea; border-bottom: none;
+            border-radius: 6px 6px 0 0;
+            padding: .5rem .75rem;
+        }
+        .toolbar-left { display: flex; align-items: center; gap: .35rem; }
+        .toolbar-right { margin-left: auto; display: flex; align-items: center; gap: .35rem; }
+        .toolbar-divider { width: 1px; height: 18px; background: #e0e0ea; margin: 0 .1rem; }
+
+        /* ── Buttons ── */
+        .btn {
+            display: inline-flex; align-items: center; gap: .35rem;
+            padding: .3rem .7rem;
+            font-size: .75rem; font-weight: 600;
+            border-radius: 4px; cursor: pointer; border: none; outline: none;
+            transition: all .12s ease;
+        }
+        .btn-primary { background: #f08020; color: white; }
+        .btn-primary:hover { background: #d06010; }
+        .btn-secondary { background: white; color: #4a4a5a; border: 1px solid #d0d0de; }
+        .btn-secondary:hover { background: #f5f5fa; border-color: #b0b0c8; }
+        .btn-ghost { background: transparent; color: #6868a0; border: 1px solid transparent; }
+        .btn-ghost:hover { background: #f0f0f8; border-color: #d8d8ea; }
+        .btn-sm { padding: .22rem .55rem; font-size: .72rem; }
+        .btn:disabled { opacity: .45; cursor: not-allowed; }
+        .btn-print { background: #f08020; color: white; }
+        .btn-print:hover { background: #d06010; }
+        .selection-count {
+            font-size: .72rem; font-weight: 700; color: #f08020;
+            background: rgba(240,128,32,.1); border: 1px solid rgba(240,128,32,.25);
+            border-radius: 10px; padding: .1rem .5rem;
+        }
+
+        /* ── Table ── */
+        .table-wrap {
+            background: white; border: 1px solid #e0e0ea;
+            border-radius: 0 0 6px 6px;
+            overflow-x: auto;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        thead th {
+            background: #f8f8fc;
+            font-size: .68rem; font-weight: 700; color: #6868a0;
+            text-transform: uppercase; letter-spacing: .05em;
+            padding: .55rem .75rem;
+            border-bottom: 1px solid #e0e0ea;
+            white-space: nowrap;
+            text-align: left;
+        }
+        thead th.col-check { width: 36px; text-align: center; }
+        thead th.col-actions { width: 60px; text-align: center; }
+        tbody tr { border-bottom: 1px solid #f0f0f8; transition: background .08s; }
+        tbody tr:last-child { border-bottom: none; }
+        tbody tr:hover { background: #fafafa; }
+        tbody tr.selected { background: rgba(240,128,32,.04); }
+        tbody tr.just-printed { background: rgba(40,160,96,.05); }
+        td { padding: .5rem .75rem; font-size: .78rem; color: #2d2d3a; vertical-align: middle; }
+        td.col-check { text-align: center; }
+        td.col-actions { text-align: center; }
+        .col-id a { color: #f08020; text-decoration: none; font-weight: 600; }
+        .col-id a:hover { text-decoration: underline; }
+        .col-lpn { font-family: 'Courier New', Courier, monospace; font-size: .75rem; color: #4a4a5a; letter-spacing: .02em; }
+        .col-order a { color: #4a4a60; text-decoration: none; }
+        .col-order a:hover { color: #f08020; }
+
+        /* ── Badges ── */
+        .badge {
+            display: inline-flex; align-items: center; gap: .25rem;
+            padding: .15rem .5rem; border-radius: 10px;
+            font-size: .68rem; font-weight: 700; white-space: nowrap;
+        }
+        .badge-printed { background: #edfaf3; color: #1a7a44; border: 1px solid #a8e0be; }
+        .badge-not-printed { background: #f8f8fc; color: #7878a0; border: 1px solid #d8d8ea; }
+        .badge-picking { background: #fff8e8; color: #a06010; border: 1px solid #f0d080; }
+
+        /* ── Toolbar actions dropdown ── */
+        .actions-wrap { position: relative; display: inline-block; }
+        .btn-actions {
+            display: inline-flex; align-items: center; gap: .35rem;
+            padding: .3rem .65rem;
+            font-size: .75rem; font-weight: 600; color: #4a4a5a;
+            background: white; border: 1px solid #d0d0de; border-radius: 4px;
+            cursor: pointer; transition: all .12s;
+        }
+        .btn-actions:hover, .btn-actions.open { background: #f5f5fa; border-color: #b0b0c8; }
+        .btn-actions .chevron { font-size: .6rem; color: #9090a8; }
+        .actions-dropdown {
+            display: none; position: absolute; left: 0; top: calc(100% + 3px);
+            background: white; border: 1px solid #d8d8ea; border-radius: 6px;
+            box-shadow: 0 4px 16px rgba(0,0,0,.12);
+            min-width: 170px; z-index: 200; padding: .3rem 0;
+        }
+        .actions-dropdown.open { display: block; }
+        .actions-dropdown-section {
+            font-size: .62rem; font-weight: 700; color: #9090a8;
+            text-transform: uppercase; letter-spacing: .07em;
+            padding: .35rem .75rem .15rem;
+        }
+        .actions-dropdown-item {
+            display: flex; align-items: center; gap: .5rem;
+            padding: .42rem .75rem;
+            font-size: .78rem; color: #2d2d3a; cursor: pointer;
+        }
+        .actions-dropdown-item:hover { background: #f5f5fa; color: #f08020; }
+        .actions-dropdown-item i { width: 13px; text-align: center; color: #9090a8; font-size: .75rem; }
+        .actions-dropdown-item:hover i { color: #f08020; }
+        .actions-dropdown-item.disabled { opacity: .4; cursor: not-allowed; pointer-events: none; }
+
+        /* ── Pagination ── */
+        .table-footer {
+            display: flex; align-items: center; justify-content: flex-end;
+            padding: .45rem .75rem;
+            background: #f8f8fc; border-top: 1px solid #e8e8f0;
+            border-radius: 0 0 6px 6px;
+            font-size: .72rem; color: #9090a8;
+            gap: .5rem;
+        }
+        .page-nav { display: flex; gap: .2rem; }
+        .page-nav button {
+            background: white; border: 1px solid #d8d8ea; border-radius: 3px;
+            padding: .18rem .45rem; font-size: .72rem; color: #6868a0; cursor: pointer;
+        }
+        .page-nav button:hover { background: #f0f0f8; }
+        .page-nav button:disabled { opacity: .4; cursor: not-allowed; }
+
+        /* ── Modal ── */
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,.45);
+            display: none; align-items: center; justify-content: center;
+            z-index: 500;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal {
+            background: white; border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0,0,0,.25);
+            width: 520px; max-width: 95vw;
+            overflow: hidden;
+        }
+        .modal-header {
+            display: flex; align-items: center; gap: .6rem;
+            padding: 1rem 1.25rem .85rem;
+            border-bottom: 1px solid #e8e8f0;
+        }
+        .modal-header h2 { font-size: .95rem; font-weight: 700; color: #1e1e2a; flex: 1; }
+        .modal-header .modal-close { background: none; border: none; font-size: .9rem; color: #9090a8; cursor: pointer; padding: .2rem; }
+        .modal-header .modal-close:hover { color: #4a4a5a; }
+        .modal-body { padding: 1rem 1.25rem; }
+        .modal-footer {
+            display: flex; align-items: center; justify-content: flex-end; gap: .5rem;
+            padding: .75rem 1.25rem;
+            border-top: 1px solid #e8e8f0;
+            background: #fafafa;
+        }
+
+        /* ── Print modal specifics ── */
+        .print-summary {
+            display: flex; align-items: flex-start; gap: .6rem;
+            background: #f8f8fc; border: 1px solid #e0e0ea; border-radius: 6px;
+            padding: .7rem .9rem; margin-bottom: 1rem;
+        }
+        .print-summary i { color: #9090a8; margin-top: .1rem; flex-shrink: 0; }
+        .print-summary-text { font-size: .8rem; color: #4a4a5a; line-height: 1.6; }
+        .print-summary-text strong { color: #1e1e2a; }
+
+        .form-row { display: flex; align-items: center; gap: .75rem; margin-bottom: .9rem; }
+        .form-label { font-size: .72rem; font-weight: 700; color: #6868a0; text-transform: uppercase; letter-spacing: .04em; white-space: nowrap; min-width: 80px; }
+        .form-control {
+            flex: 1; padding: .35rem .6rem;
+            font-size: .8rem; color: #2d2d3a;
+            border: 1px solid #d0d0de; border-radius: 4px; outline: none;
+            background: white;
+        }
+        .form-control:focus { border-color: #f08020; box-shadow: 0 0 0 2px rgba(240,128,32,.15); }
+
+        .print-options { display: flex; flex-direction: column; gap: .5rem; }
+        .print-option {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: .65rem .9rem;
+            border: 1px solid #e0e0ea; border-radius: 6px;
+            cursor: pointer; transition: all .1s;
+        }
+        .print-option:hover { border-color: #f08020; background: rgba(240,128,32,.03); }
+        .print-option.disabled { opacity: .4; cursor: not-allowed; }
+        .print-option.disabled:hover { border-color: #e0e0ea; background: white; }
+        .print-option-left { display: flex; flex-direction: column; gap: .1rem; }
+        .print-option-title { font-size: .8rem; font-weight: 700; color: #1e1e2a; }
+        .print-option-desc { font-size: .72rem; color: #9090a8; }
+        .print-option-count { font-size: .82rem; font-weight: 700; color: #f08020; }
+
+        /* ── Success state ── */
+        .print-success {
+            display: flex; flex-direction: column; align-items: center;
+            text-align: center; padding: 1.5rem 1rem;
+        }
+        .print-success i { font-size: 2.2rem; color: #28a060; margin-bottom: .75rem; }
+        .print-success h3 { font-size: .95rem; font-weight: 700; color: #1e1e2a; margin-bottom: .3rem; }
+        .print-success p { font-size: .8rem; color: #6868a0; }
+
+        /* ── Toast ── */
+        .toast {
+            position: fixed; bottom: 1.5rem; right: 1.5rem;
+            background: #1e1e2a; color: white;
+            padding: .6rem 1rem; border-radius: 6px;
+            font-size: .78rem; font-weight: 500;
+            display: flex; align-items: center; gap: .5rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,.25);
+            z-index: 600;
+            opacity: 0; transform: translateY(8px);
+            transition: all .2s ease;
+            pointer-events: none;
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast i { color: #28a060; }
+
+        /* ── Checkbox styling ── */
+        input[type="checkbox"] {
+            width: 14px; height: 14px; accent-color: #f08020; cursor: pointer;
+        }
+
+        /* ── Sortable columns ── */
+        thead th.sortable { cursor: pointer; user-select: none; }
+        thead th.sortable:hover { background: #f0f0fa; color: #4a4a60; }
+        thead th.sort-asc .sort-icon,
+        thead th.sort-desc .sort-icon { color: #f08020; }
+        .sort-icon { font-size: .55rem; color: #c0c0d8; margin-left: .2rem; }
+
+        /* ── Configure icon button ── */
+        .icon-btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 28px; height: 28px; border-radius: 4px;
+            background: white; border: 1px solid #d0d0de; cursor: pointer; color: #6868a0;
+            font-size: .8rem;
+        }
+        .icon-btn:hover { background: #f0f0f8; border-color: #b8b8d0; }
+    </style>
+</head>
+<body>
+
+<!-- ── Topbar ── -->
+<div class="topbar">
+    <i class="fas fa-bars topbar-hamburger"></i>
+    <a class="topbar-brand" href="#">
+        <div class="logo-mark">D</div>
+        <span class="logo-text">Deposco</span>
+    </a>
+    <input class="topbar-search" type="text" placeholder="Search…">
+    <div class="topbar-icons">
+        <i class="fas fa-th"></i>
+        <i class="fas fa-bell"></i>
+        <i class="fas fa-question-circle"></i>
+        <i class="fas fa-user-circle"></i>
+    </div>
+</div>
+
+<div class="app-layout">
+
+    <!-- ── Sidebar ── -->
+    <div class="sidebar">
+        <div class="sidebar-section-label">Application Menu</div>
+        <div class="sidebar-item"><i class="fas fa-database"></i> Master Data</div>
+        <div class="sidebar-item"><i class="fas fa-warehouse"></i> Warehouse Setup</div>
+        <div class="sidebar-item"><i class="fas fa-boxes"></i> Inventory Admin</div>
+        <div class="sidebar-item"><i class="fas fa-dolly"></i> Putaway</div>
+        <div class="sidebar-item"><i class="fas fa-shopping-cart"></i> Purchasing</div>
+        <div class="sidebar-item"><i class="fas fa-file-alt"></i> Orders</div>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-item active"><i class="fas fa-truck"></i> Trip Mgmt</div>
+        <div style="padding-left:1.4rem;">
+            <div class="sidebar-item"><i class="fas fa-layer-group"></i> Pallet Optimization</div>
+            <div class="sidebar-item active"><i class="fas fa-route"></i> Trip Management</div>
+        </div>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-item"><i class="fas fa-cog"></i> Order Processing</div>
+        <div class="sidebar-item"><i class="fas fa-network-wired"></i> Distribution</div>
+        <div class="sidebar-item"><i class="fas fa-box-open"></i> Packing</div>
+        <div class="sidebar-item"><i class="fas fa-shipping-fast"></i> Shipping</div>
+        <div class="sidebar-item"><i class="fas fa-print"></i> Printing</div>
+    </div>
+
+    <!-- ── Main ── -->
+    <div class="main">
+
+        <!-- Page chrome -->
+        <div class="page-chrome">
+            <div class="breadcrumb">
+                <a href="#">Trip Management</a> › 20261113101445
+            </div>
+            <div class="page-title-row">
+                <i class="fas fa-chevron-left" style="color:#9090a8;font-size:.8rem;cursor:pointer;"></i>
+                <span class="page-title">20261113101445</span>
+                <span class="badge-planned">Planned</span>
+                <span class="page-title-meta">Updated: Nov 13, 2026 10:14</span>
+                <div class="page-chrome-actions">
+                    <button class="btn btn-secondary btn-sm"><i class="fas fa-ellipsis-h"></i> Actions</button>
+                    <button class="btn btn-primary btn-sm"><i class="fas fa-save"></i> Save Trip</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trip Overview -->
+        <div class="trip-overview">
+            <div class="trip-overview-title">Trip Overview</div>
+            <div class="fields-grid">
+                <div class="field-block"><span class="field-label">Reference Number</span><span class="field-value empty">—</span></div>
+                <div class="field-block"><span class="field-label">Account Number</span><span class="field-value empty">—</span></div>
+                <div class="field-block"><span class="field-label">Dock Door</span><span class="field-value empty">—</span></div>
+                <div class="field-block"><span class="field-label">Estimated Delivery Date</span><span class="field-value empty">—</span></div>
+                <div class="field-block"><span class="field-label">Business Unit</span><span class="field-value" style="color:#f08020;">DEMOSAND3PL</span></div>
+                <div class="field-block"><span class="field-label">SCAC</span><span class="field-value empty">—</span></div>
+                <div class="field-block"><span class="field-label">Total Containers</span><span class="field-value">12</span></div>
+                <div class="field-block"><span class="field-label">Total Packs</span><span class="field-value">186</span></div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs-bar">
+            <div class="tab" onclick="switchTab(this)">Orders</div>
+            <div class="tab" onclick="switchTab(this)">Shipments</div>
+            <div class="tab active" onclick="switchTab(this)">Containers</div>
+            <div class="tab" onclick="switchTab(this)">Shipped Containers</div>
+            <div class="tab" onclick="switchTab(this)">Pallet Optimization</div>
+        </div>
+
+        <!-- Containers content -->
+        <div class="content-area">
+
+            <!-- Toolbar -->
+            <div class="table-toolbar">
+                <div class="toolbar-left">
+                    <button class="btn btn-secondary btn-sm"><i class="fas fa-sliders-h"></i> Defaults</button>
+                    <div class="icon-btn" title="Column settings"><i class="fas fa-cog"></i></div>
+                    <div class="toolbar-divider"></div>
+                    <button class="btn btn-ghost btn-sm"><i class="fas fa-filter"></i> Filter</button>
+                    <button class="btn btn-ghost btn-sm"><i class="fas fa-sort"></i> Sort</button>
+                    <div class="toolbar-divider"></div>
+                    <span class="selection-count" id="selection-count" style="display:none;"></span>
+                    <div class="actions-wrap" id="actions-wrap">
+                        <button class="btn-actions" id="btn-actions" onclick="toggleActionsMenu(event)">
+                            Actions <i class="fas fa-chevron-down chevron"></i>
+                        </button>
+                        <div class="actions-dropdown" id="actions-dropdown">
+                            <div class="actions-dropdown-section">Actions</div>
+                            <div class="actions-dropdown-item" id="action-reprint" onclick="reprintSelected()">
+                                <i class="fas fa-print"></i> Print Label
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="toolbar-right">
+                    <button class="btn btn-print btn-sm" onclick="openPrintModal()">
+                        <i class="fas fa-print"></i> Print Labels
+                    </button>
+                    <div class="toolbar-divider"></div>
+                    <button class="btn btn-ghost btn-sm"><i class="fas fa-th"></i> Configure</button>
+                    <span style="font-size:.72rem;color:#9090a8;margin-left:.25rem;">1 – 12 of 12</span>
+                    <div class="page-nav">
+                        <button disabled><i class="fas fa-chevron-left"></i></button>
+                        <button disabled><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="col-check"><input type="checkbox" id="select-all" onchange="toggleSelectAll(this)"></th>
+                            <th class="sortable" id="th-id" onclick="sortBy('id')">Number <i class="fas fa-sort sort-icon"></i></th>
+                            <th class="sortable" id="th-lpn" onclick="sortBy('lpn')">LPN Number (SSCC) <i class="fas fa-sort sort-icon"></i></th>
+                            <th class="sortable" id="th-order" onclick="sortBy('order')">Order <i class="fas fa-sort sort-icon"></i></th>
+                            <th class="sortable" id="th-tp" onclick="sortBy('tp')">Trading Partner <i class="fas fa-sort sort-icon"></i></th>
+                            <th class="sortable" id="th-type" onclick="sortBy('type')">Type <i class="fas fa-sort sort-icon"></i></th>
+                            <th class="sortable" id="th-status" onclick="sortBy('status')">Status <i class="fas fa-sort sort-icon"></i></th>
+                            <th class="sortable" id="th-printed" onclick="sortBy('printed')">Printed <i class="fas fa-sort sort-icon"></i></th>
+                        </tr>
+                    </thead>
+                    <tbody id="containers-tbody"></tbody>
+                </table>
+                <div class="table-footer">
+                    <span>1 – 12 of 12</span>
+                    <div class="page-nav">
+                        <button disabled><i class="fas fa-chevron-left"></i></button>
+                        <button disabled><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- ── Print Labels Modal ── -->
+<div class="modal-overlay" id="print-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <i class="fas fa-print" style="color:#f08020;"></i>
+            <h2>Print SSCC Labels</h2>
+            <button class="modal-close" onclick="closePrintModal()"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- Default view -->
+        <div id="modal-default">
+            <div class="modal-body">
+                <div class="print-summary" id="modal-summary">
+                    <i class="fas fa-info-circle"></i>
+                    <div class="print-summary-text" id="modal-summary-text"></div>
+                </div>
+
+                <div class="form-row">
+                    <span class="form-label">Printer</span>
+                    <select class="form-control" id="printer-select">
+                        <option value="dock-a">Label Printer 01 — Shipping Dock A</option>
+                        <option value="dock-b">Label Printer 02 — Shipping Dock B</option>
+                        <option value="warehouse">Label Printer 03 — Warehouse Floor</option>
+                        <option value="office">Label Printer 04 — Shipping Office</option>
+                    </select>
+                </div>
+
+                <div class="print-options" id="print-options-section">
+                    <div class="print-option" id="opt-all" onclick="executePrint('all')">
+                        <div class="print-option-left">
+                            <span class="print-option-title">Print All Unprinted</span>
+                            <span class="print-option-desc">Print labels for all containers that have not yet been printed</span>
+                        </div>
+                        <span class="print-option-count" id="opt-all-count"></span>
+                    </div>
+                    <div class="print-option" id="opt-selected" onclick="executePrint('selected')">
+                        <div class="print-option-left">
+                            <span class="print-option-title">Print Selected</span>
+                            <span class="print-option-desc">Print labels for the containers you have selected in the table</span>
+                        </div>
+                        <span class="print-option-count" id="opt-selected-count"></span>
+                    </div>
+                    <div class="print-option" id="opt-reprint-all" onclick="executePrint('reprint-all')">
+                        <div class="print-option-left">
+                            <span class="print-option-title">Print All</span>
+                            <span class="print-option-desc">Print labels for all containers on this trip, including already-printed ones</span>
+                        </div>
+                        <span class="print-option-count" id="opt-reprint-all-count"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closePrintModal()">Cancel</button>
+                <button class="btn btn-primary" id="reprint-confirm-btn" onclick="executePrint('selected')" style="display:none;"></button>
+            </div>
+        </div>
+
+        <!-- Success view -->
+        <div id="modal-success" style="display:none;">
+            <div class="modal-body">
+                <div class="print-success">
+                    <i class="fas fa-check-circle"></i>
+                    <h3 id="success-title">Labels sent to printer</h3>
+                    <p id="success-desc"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closePrintModal()">Done</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── Toast ── -->
+<div class="toast" id="toast">
+    <i class="fas fa-check-circle"></i>
+    <span id="toast-text"></span>
+</div>
+
+<script>
+    // ── Data ──────────────────────────────────────────────────────────────
+    const containers = [
+        { id: 'CTN-00010177', lpn: '003456789000000177', order: 'ORD-2047', tp: 'Target', type: 'Case', status: 'Picking', printed: true },
+        { id: 'CTN-00010160', lpn: '003456789000000160', order: 'ORD-2047', tp: 'Target', type: 'Case', status: 'Picking', printed: true },
+        { id: 'CTN-00010153', lpn: '003456789000000153', order: 'ORD-2047', tp: 'Target', type: 'Case', status: 'Picking', printed: false },
+        { id: 'CTN-00010146', lpn: '003456789000000146', order: 'ORD-2047', tp: 'Target', type: 'Case', status: 'Picking', printed: false },
+        { id: 'CTN-00010139', lpn: '003456789000000139', order: 'ORD-2047', tp: 'Target', type: 'Case', status: 'Picking', printed: true },
+        { id: 'CTN-00010122', lpn: '003456789000000122', order: 'ORD-2047', tp: 'Target', type: 'Case', status: 'Picking', printed: true },
+        { id: 'CTN-00010115', lpn: '003456789000000115', order: 'ORD-2048', tp: 'Walmart', type: 'Case', status: 'Picking', printed: false },
+        { id: 'CTN-00010108', lpn: '003456789000000108', order: 'ORD-2048', tp: 'Walmart', type: 'Case', status: 'Picking', printed: false },
+        { id: 'CTN-00010092', lpn: '003456789000000092', order: 'ORD-2048', tp: 'Walmart', type: 'Case', status: 'Picking', printed: true },
+        { id: 'CTN-00010085', lpn: '003456789000000085', order: 'ORD-2048', tp: 'Walmart', type: 'Case', status: 'Picking', printed: true },
+        { id: 'CTN-00010078', lpn: '003456789000000078', order: 'ORD-2049', tp: 'Target', type: 'Pallet', status: 'Picking', printed: false },
+        { id: 'CTN-00010071', lpn: '003456789000000071', order: 'ORD-2049', tp: 'Target', type: 'Case', status: 'Picking', printed: true },
+    ];
+
+    let selected = new Set();
+
+    // ── Sort state ────────────────────────────────────────────────────────
+    let sortState = { col: null, dir: 'asc' };
+
+    function sortBy(col) {
+        sortState.dir = sortState.col === col && sortState.dir === 'asc' ? 'desc' : 'asc';
+        sortState.col = col;
+        renderTable();
+    }
+
+    function getSortedIndices() {
+        const indices = containers.map((_, i) => i);
+        if (!sortState.col) return indices;
+        const { col, dir } = sortState;
+        return indices.sort((a, b) => {
+            let va = containers[a][col];
+            let vb = containers[b][col];
+            if (typeof va === 'boolean') { va = va ? 1 : 0; vb = vb ? 1 : 0; }
+            if (va < vb) return dir === 'asc' ? -1 : 1;
+            if (va > vb) return dir === 'asc' ? 1 : -1;
+            return 0;
+        });
+    }
+
+    function updateSortHeaders() {
+        ['id','lpn','order','tp','type','status','printed'].forEach(col => {
+            const th = document.getElementById(`th-${col}`);
+            if (!th) return;
+            th.classList.remove('sort-asc', 'sort-desc');
+            const icon = th.querySelector('.sort-icon');
+            icon.className = 'fas sort-icon';
+            if (sortState.col === col) {
+                th.classList.add(sortState.dir === 'asc' ? 'sort-asc' : 'sort-desc');
+                icon.classList.add(sortState.dir === 'asc' ? 'fa-sort-up' : 'fa-sort-down');
+            } else {
+                icon.classList.add('fa-sort');
+            }
+        });
+    }
+
+    // ── Render table ──────────────────────────────────────────────────────
+    function renderTable() {
+        const tbody = document.getElementById('containers-tbody');
+        tbody.innerHTML = '';
+        getSortedIndices().forEach(i => {
+            const c = containers[i];
+            const isSelected = selected.has(i);
+            const tr = document.createElement('tr');
+            if (isSelected) tr.classList.add('selected');
+            tr.innerHTML = `
+                <td class="col-check">
+                    <input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleRow(${i}, this)">
+                </td>
+                <td class="col-id"><a href="#">${c.id}</a></td>
+                <td class="col-lpn">${c.lpn}</td>
+                <td class="col-order"><a href="#">${c.order}</a></td>
+                <td>${c.tp}</td>
+                <td>${c.type}</td>
+                <td><span class="badge badge-picking">${c.status}</span></td>
+                <td>
+                    ${c.printed
+                        ? '<input type="checkbox" checked disabled style="width:16px;height:16px;accent-color:#f08020;cursor:default;">'
+                        : '<input type="checkbox" disabled style="width:16px;height:16px;cursor:default;">'
+                    }
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+        updateSelectAllState();
+        updateSortHeaders();
+    }
+
+    // ── Selection ─────────────────────────────────────────────────────────
+    function toggleRow(i, cb) {
+        if (cb.checked) selected.add(i);
+        else selected.delete(i);
+        renderTable();
+        updateSelectionCount();
+    }
+
+    function toggleSelectAll(cb) {
+        if (cb.checked) containers.forEach((_, i) => selected.add(i));
+        else selected.clear();
+        renderTable();
+        updateSelectionCount();
+    }
+
+    function updateSelectAllState() {
+        const cb = document.getElementById('select-all');
+        cb.checked = selected.size === containers.length && containers.length > 0;
+        cb.indeterminate = selected.size > 0 && selected.size < containers.length;
+    }
+
+    function updateSelectionCount() {
+        const el = document.getElementById('selection-count');
+        if (selected.size > 0) {
+            el.style.display = 'inline-flex';
+            el.textContent = `${selected.size} selected`;
+        } else {
+            el.style.display = 'none';
+        }
+        updateActionsMenu();
+    }
+
+    // ── Print modal ───────────────────────────────────────────────────────
+    function openPrintModal(mode = 'full') {
+        const unprinted = containers.filter(c => !c.printed).length;
+        const selCount = selected.size;
+        const isReprint = mode === 'reprint';
+
+        // Summary row — hidden in reprint mode
+        document.getElementById('modal-summary').style.display = isReprint ? 'none' : '';
+        if (!isReprint) {
+            const summaryEl = document.getElementById('modal-summary-text');
+            if (unprinted === 0) {
+                summaryEl.innerHTML = `All <strong>${containers.length}</strong> SSCC labels have been printed. You can reprint individual labels or reprint all.`;
+            } else {
+                summaryEl.innerHTML = `<strong>${unprinted}</strong> of ${containers.length} SSCC labels have not yet been printed.`;
+            }
+        }
+
+        // Print options — hidden in reprint mode
+        document.getElementById('print-options-section').style.display = isReprint ? 'none' : '';
+        if (!isReprint) {
+            document.getElementById('opt-all-count').textContent = unprinted > 0 ? `${unprinted} labels` : '—';
+            document.getElementById('opt-selected-count').textContent = selCount > 0 ? `${selCount} labels` : '—';
+            document.getElementById('opt-reprint-all-count').textContent = `${containers.length} labels`;
+            document.getElementById('opt-all').classList.toggle('disabled', unprinted === 0);
+            document.getElementById('opt-selected').classList.toggle('disabled', selCount === 0);
+        }
+
+        // Reprint confirm button — shown only in reprint mode
+        const reprintBtn = document.getElementById('reprint-confirm-btn');
+        reprintBtn.style.display = isReprint ? '' : 'none';
+        if (isReprint) {
+            reprintBtn.textContent = `Print ${selCount} Selected Label${selCount !== 1 ? 's' : ''}`;
+        }
+
+        // Reset to default view
+        document.getElementById('modal-default').style.display = '';
+        document.getElementById('modal-success').style.display = 'none';
+
+        document.getElementById('print-modal').classList.add('open');
+    }
+
+    function closePrintModal() {
+        document.getElementById('print-modal').classList.remove('open');
+    }
+
+    function executePrint(mode) {
+        const optEl = document.getElementById(mode === 'all' ? 'opt-all' : mode === 'selected' ? 'opt-selected' : 'opt-reprint-all');
+        if (optEl.classList.contains('disabled')) return;
+
+        const printer = document.getElementById('printer-select').options[document.getElementById('printer-select').selectedIndex].text;
+        let count = 0;
+
+        if (mode === 'all') {
+            containers.forEach(c => { if (!c.printed) { c.printed = true; count++; } });
+        } else if (mode === 'selected') {
+            selected.forEach(i => { containers[i].printed = true; count++; });
+            selected.clear();
+        } else {
+            count = containers.length;
+            containers.forEach(c => c.printed = true);
+        }
+
+        // Show success
+        document.getElementById('modal-default').style.display = 'none';
+        document.getElementById('modal-success').style.display = '';
+        document.getElementById('success-title').textContent = `${count} label${count !== 1 ? 's' : ''} sent to printer`;
+        document.getElementById('success-desc').textContent = `Sent to: ${printer}`;
+
+        renderTable();
+        updateSelectionCount();
+        showToast(`${count} label${count !== 1 ? 's' : ''} sent to ${printer.split('—')[0].trim()}`);
+    }
+
+    // ── Toolbar Actions dropdown ───────────────────────────────────────────
+    function toggleActionsMenu(event) {
+        event.stopPropagation();
+        const dropdown = document.getElementById('actions-dropdown');
+        const btn = document.getElementById('btn-actions');
+        const isOpen = dropdown.classList.contains('open');
+        dropdown.classList.toggle('open', !isOpen);
+        btn.classList.toggle('open', !isOpen);
+    }
+
+    function updateActionsMenu() {
+        const reprintItem = document.getElementById('action-reprint');
+        reprintItem.classList.toggle('disabled', selected.size === 0);
+    }
+
+    function reprintSelected() {
+        if (selected.size === 0) return;
+        document.getElementById('actions-dropdown').classList.remove('open');
+        document.getElementById('btn-actions').classList.remove('open');
+        openPrintModal('reprint');
+    }
+
+    document.addEventListener('click', () => {
+        document.getElementById('actions-dropdown').classList.remove('open');
+        document.getElementById('btn-actions').classList.remove('open');
+    });
+
+    function reprintSingle(i) {
+        const c = containers[i];
+        const printer = 'Label Printer 01 — Shipping Dock A';
+        c.printed = true;
+        renderTable();
+        showToast(`Printed label for ${c.id}`);
+    }
+
+    // ── Toast ─────────────────────────────────────────────────────────────
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        document.getElementById('toast-text').textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // ── Tab switching (stub) ──────────────────────────────────────────────
+    function switchTab(el) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+    }
+
+    // ── Init ──────────────────────────────────────────────────────────────
+    renderTable();
+</script>
+</body>
+</html>
