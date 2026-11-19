@@ -78,13 +78,15 @@
         .badge-planned { display: inline-flex; align-items: center; padding: .15rem .5rem; border-radius: 10px; font-size: .68rem; font-weight: 700; background: #fff3e0; color: #c06010; border: 1px solid #f0c080; text-transform: uppercase; letter-spacing: .04em; }
 
         /* ── Trip Overview ── */
-        .trip-overview { background: white; padding: .75rem 1.25rem; border-bottom: 1px solid #e0e0ea; }
-        .trip-overview-title { font-size: .62rem; font-weight: 700; color: #9090a8; text-transform: uppercase; letter-spacing: .05em; margin-bottom: .5rem; }
-        .fields-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: .5rem 1.5rem; }
-        .field-block { display: flex; flex-direction: column; gap: .1rem; }
-        .field-label { font-size: .68rem; color: #9090a8; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
-        .field-value { font-size: .8rem; color: #2d2d3a; font-weight: 500; min-height: 1.1rem; }
-        .field-value.empty { color: #c0c0d0; }
+        .trip-overview { background: white; padding: .85rem 1.25rem 1.1rem; border-bottom: 1px solid #e0e0ea; }
+        .trip-overview-title { font-size: .88rem; font-weight: 700; color: #1e1e2a; margin-bottom: .75rem; }
+        .fields-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0 2rem; }
+        .field-block { display: flex; flex-direction: column; padding-bottom: .28rem; border-bottom: 1px solid #d8d8e8; margin-bottom: .6rem; }
+        .field-label { font-size: .68rem; color: #6a6a8a; font-weight: 400; margin-bottom: .15rem; }
+        .field-row { display: flex; align-items: center; min-height: 1.25rem; }
+        .field-value { font-size: .82rem; color: #2d2d3a; font-weight: 400; flex: 1; }
+        .field-value.empty { color: #2d2d3a; }
+        .field-lock { color: #ccccd8; font-size: .58rem; flex-shrink: 0; margin-left: .4rem; }
 
         /* ── Tabs ── */
         .tabs-bar { background: white; border-bottom: 2px solid #e0e0ea; padding: 0 1.25rem; display: flex; gap: 0; }
@@ -107,14 +109,23 @@
 
         /* ── Toolbar ── */
         .table-toolbar {
-            display: flex; align-items: center; gap: .4rem;
             background: white; border: 1px solid #e0e0ea; border-bottom: none;
             border-radius: 6px 6px 0 0;
-            padding: .5rem .75rem;
         }
+        .toolbar-row { display: flex; align-items: center; gap: .4rem; padding: .42rem .75rem; }
+        .toolbar-row + .toolbar-row { border-top: 1px solid #f0f0f8; }
         .toolbar-left { display: flex; align-items: center; gap: .35rem; }
         .toolbar-right { margin-left: auto; display: flex; align-items: center; gap: .35rem; }
         .toolbar-divider { width: 1px; height: 18px; background: #e0e0ea; margin: 0 .1rem; }
+
+        /* ── Section heading ── */
+        .section-heading { font-size: .9rem; font-weight: 700; color: #1e1e2a; margin-bottom: .55rem; }
+
+        /* ── Column sub-label ── */
+        .col-sublabel { display: block; font-size: .6rem; font-weight: 500; color: #b8b8d0; text-transform: none; letter-spacing: 0; margin-top: .08rem; }
+
+        /* ── Type badge ── */
+        .badge-type { background: white; color: #3a3a4a; border: 1.5px solid #9090a8; font-weight: 600; }
 
         /* ── Buttons ── */
         .btn {
@@ -297,6 +308,21 @@
         .print-option-desc { font-size: .72rem; color: #9090a8; }
         .print-option-count { font-size: .82rem; font-weight: 700; color: #f08020; }
 
+        /* ── Print scope tiles ── */
+        .print-scope-tiles { display: flex; gap: 8px; margin-top: 2px; }
+        .print-scope-tile {
+            flex: 1; border: 1.5px solid #3a3a4a; border-radius: 6px;
+            padding: 10px 8px; cursor: pointer; text-align: center;
+            color: #9090a8; transition: border-color .15s, background .15s;
+            user-select: none;
+        }
+        .print-scope-tile:hover { border-color: #f08020; background: rgba(240,128,32,.05); }
+        .print-scope-tile.selected { border-color: #f08020; background: rgba(240,128,32,.1); color: #f08020; }
+        .print-scope-tile input[type="radio"] { display: none; }
+        .print-scope-icon { font-size: 1.3rem; margin-bottom: 5px; }
+        .print-scope-label { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: inherit; }
+        .print-scope-desc { font-size: .68rem; margin-top: 2px; color: #6868a0; }
+
         /* ── Success state ── */
         .print-success {
             display: flex; flex-direction: column; align-items: center;
@@ -333,6 +359,43 @@
         thead th.sort-asc .sort-icon,
         thead th.sort-desc .sort-icon { color: #f08020; }
         .sort-icon { font-size: .55rem; color: #c0c0d8; margin-left: .2rem; }
+
+        /* ── Print status badges (pallet level) ── */
+        .badge-print-all     { background: #edfaf3; color: #1a7a44; border: 1px solid #a8e0be; }
+        .badge-print-partial { background: #fff8e8; color: #a06010; border: 1px solid #f0d080; }
+        .badge-print-none    { background: #f8f8fc; color: #7878a0; border: 1px solid #d8d8ea; }
+
+        /* ── Context chips (inner modal) ── */
+        .context-chips { display: flex; flex-wrap: wrap; gap: .35rem; margin-bottom: .85rem; }
+        .context-chip {
+            display: inline-flex; align-items: center; gap: .3rem;
+            background: #f0f0f8; border: 1px solid #d8d8ea; border-radius: 4px;
+            padding: .2rem .55rem; font-size: .72rem; color: #4a4a5a; font-weight: 600;
+        }
+        .context-chip i { color: #9090a8; font-size: .65rem; }
+
+        /* ── Inner containers table (inside modal) ── */
+        .inner-table-wrap {
+            border: 1px solid #e0e0ea; border-radius: 6px;
+            overflow: hidden; max-height: 260px; overflow-y: auto;
+        }
+        .inner-table { width: 100%; border-collapse: collapse; }
+        .inner-table thead th {
+            background: #f8f8fc; font-size: .68rem; font-weight: 700; color: #6868a0;
+            text-transform: uppercase; letter-spacing: .05em;
+            padding: .45rem .65rem; border-bottom: 1px solid #e0e0ea;
+            white-space: nowrap; text-align: left; position: sticky; top: 0;
+        }
+        .inner-table thead th.col-check { width: 36px; text-align: center; }
+        .inner-table tbody tr { border-bottom: 1px solid #f0f0f8; transition: background .08s; }
+        .inner-table tbody tr:last-child { border-bottom: none; }
+        .inner-table tbody tr:hover { background: #fafafa; }
+        .inner-table tbody tr.selected { background: rgba(240,128,32,.04); }
+        .inner-table td { padding: .42rem .65rem; font-size: .78rem; color: #2d2d3a; vertical-align: middle; }
+        .inner-table td.col-check { text-align: center; }
+        .inner-group-row td { background: #f4f4f8; padding: .3rem .65rem; border-bottom: 1px solid #e8e8f0; }
+        .inner-group-label { font-size: .7rem; font-weight: 700; color: #5858a0; display: flex; align-items: center; gap: .4rem; }
+        .inner-group-label i { font-size: .65rem; }
 
         /* ── Configure icon button ── */
         .icon-btn {
@@ -389,6 +452,7 @@
 
     <!-- ── Main ── -->
     <div class="main">
+        <div id="trip-screen">
 
         <!-- Page chrome -->
         <div class="page-chrome">
@@ -411,14 +475,14 @@
         <div class="trip-overview">
             <div class="trip-overview-title">Trip Overview</div>
             <div class="fields-grid">
-                <div class="field-block"><span class="field-label">Reference Number</span><span class="field-value empty">—</span></div>
-                <div class="field-block"><span class="field-label">Account Number</span><span class="field-value empty">—</span></div>
-                <div class="field-block"><span class="field-label">Dock Door</span><span class="field-value empty">—</span></div>
-                <div class="field-block"><span class="field-label">Estimated Delivery Date</span><span class="field-value empty">—</span></div>
-                <div class="field-block"><span class="field-label">Business Unit</span><span class="field-value" style="color:#f08020;">DEMOSAND3PL</span></div>
-                <div class="field-block"><span class="field-label">SCAC</span><span class="field-value empty">—</span></div>
-                <div class="field-block"><span class="field-label">Total Containers</span><span class="field-value">12</span></div>
-                <div class="field-block"><span class="field-label">Total Packs</span><span class="field-value">186</span></div>
+                <div class="field-block"><span class="field-label">Reference Number</span><div class="field-row"><span class="field-value empty">&nbsp;</span><i class="fas fa-lock field-lock"></i></div></div>
+                <div class="field-block"><span class="field-label">Account Number</span><div class="field-row"><span class="field-value empty">&nbsp;</span><i class="fas fa-lock field-lock"></i></div></div>
+                <div class="field-block"><span class="field-label">Dock Door</span><div class="field-row"><span class="field-value empty">&nbsp;</span><i class="fas fa-lock field-lock"></i></div></div>
+                <div class="field-block"><span class="field-label">Estimated Delivery Date</span><div class="field-row"><span class="field-value empty">&nbsp;</span><i class="fas fa-lock field-lock"></i></div></div>
+                <div class="field-block"><span class="field-label">Business Unit</span><div class="field-row"><span class="field-value" style="color:#f08020;">DEMOSAND3PL</span><i class="fas fa-lock field-lock"></i></div></div>
+                <div class="field-block"><span class="field-label">Carrier Equipment Number</span><div class="field-row"><span class="field-value empty">&nbsp;</span><i class="fas fa-lock field-lock"></i></div></div>
+                <div class="field-block"><span class="field-label">Driver Name</span><div class="field-row"><span class="field-value empty">&nbsp;</span><i class="fas fa-lock field-lock"></i></div></div>
+                <div class="field-block"><span class="field-label">SCAC</span><div class="field-row"><span class="field-value empty">&nbsp;</span><i class="fas fa-lock field-lock"></i></div></div>
             </div>
         </div>
 
@@ -434,38 +498,45 @@
         <!-- Containers content -->
         <div class="content-area">
 
+            <div class="section-heading">Containers</div>
+
             <!-- Toolbar -->
             <div class="table-toolbar">
-                <div class="toolbar-left">
-                    <button class="btn btn-secondary btn-sm"><i class="fas fa-sliders-h"></i> Defaults</button>
-                    <div class="icon-btn" title="Column settings"><i class="fas fa-cog"></i></div>
-                    <div class="toolbar-divider"></div>
-                    <button class="btn btn-ghost btn-sm"><i class="fas fa-filter"></i> Filter</button>
-                    <button class="btn btn-ghost btn-sm"><i class="fas fa-sort"></i> Sort</button>
-                    <div class="toolbar-divider"></div>
-                    <span class="selection-count" id="selection-count" style="display:none;"></span>
-                    <div class="actions-wrap" id="actions-wrap">
-                        <button class="btn-actions" id="btn-actions" onclick="toggleActionsMenu(event)">
-                            Actions <i class="fas fa-chevron-down chevron"></i>
-                        </button>
-                        <div class="actions-dropdown" id="actions-dropdown">
-                            <div class="actions-dropdown-section">Actions</div>
-                            <div class="actions-dropdown-item" id="action-reprint" onclick="reprintSelected()">
-                                <i class="fas fa-print"></i> Print Label
+                <!-- Row 1: Defaults / Configure -->
+                <div class="toolbar-row">
+                    <div class="toolbar-left">
+                        <button class="btn btn-secondary btn-sm"><i class="fas fa-sliders-h"></i> Defaults <i class="fas fa-chevron-down" style="font-size:.55rem;margin-left:.1rem;"></i></button>
+                        <div class="icon-btn" title="Column settings"><i class="fas fa-cog"></i></div>
+                    </div>
+                    <div class="toolbar-right">
+                        <button class="btn btn-ghost btn-sm"><i class="fas fa-th"></i> Configure</button>
+                    </div>
+                </div>
+                <!-- Row 2: Filter / Sort / selection / pagination -->
+                <div class="toolbar-row">
+                    <div class="toolbar-left">
+                        <button class="btn btn-ghost btn-sm"><i class="fas fa-filter"></i> Filter</button>
+                        <button class="btn btn-ghost btn-sm"><i class="fas fa-sort"></i> Sort</button>
+                        <div class="toolbar-divider"></div>
+                        <span class="selection-count" id="selection-count" style="display:none;"></span>
+                        <div class="actions-wrap" id="actions-wrap" style="display:none;">
+                            <button class="btn-actions" id="btn-actions" onclick="toggleActionsMenu(event)">
+                                Actions <i class="fas fa-chevron-down chevron"></i>
+                            </button>
+                            <div class="actions-dropdown" id="actions-dropdown">
+                                <div class="actions-dropdown-section">Actions</div>
+                                <div class="actions-dropdown-item" id="action-reprint" onclick="reprintSelected()">
+                                    <i class="fas fa-print"></i> Print Label
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="toolbar-right">
-                    <button class="btn btn-print btn-sm" onclick="openPrintModal()">
-                        <i class="fas fa-print"></i> Print Labels
-                    </button>
-                    <div class="toolbar-divider"></div>
-                    <button class="btn btn-ghost btn-sm"><i class="fas fa-th"></i> Configure</button>
-                    <span style="font-size:.72rem;color:#9090a8;margin-left:.25rem;">1 – 12 of 12</span>
-                    <div class="page-nav">
-                        <button disabled><i class="fas fa-chevron-left"></i></button>
-                        <button disabled><i class="fas fa-chevron-right"></i></button>
+                    <div class="toolbar-right">
+                        <span style="font-size:.72rem;color:#9090a8;">1 – 6 of 6</span>
+                        <div class="page-nav">
+                            <button disabled><i class="fas fa-chevron-left"></i></button>
+                            <button disabled><i class="fas fa-chevron-right"></i></button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -476,19 +547,17 @@
                     <thead>
                         <tr>
                             <th class="col-check"><input type="checkbox" id="select-all" onchange="toggleSelectAll(this)"></th>
-                            <th class="sortable" id="th-id" onclick="sortBy('id')">Number <i class="fas fa-sort sort-icon"></i></th>
-                            <th class="sortable" id="th-lpn" onclick="sortBy('lpn')">LPN Number (SSCC) <i class="fas fa-sort sort-icon"></i></th>
-                            <th class="sortable" id="th-order" onclick="sortBy('order')">Order <i class="fas fa-sort sort-icon"></i></th>
-                            <th class="sortable" id="th-tp" onclick="sortBy('tp')">Trading Partner <i class="fas fa-sort sort-icon"></i></th>
-                            <th class="sortable" id="th-type" onclick="sortBy('type')">Type <i class="fas fa-sort sort-icon"></i></th>
-                            <th class="sortable" id="th-status" onclick="sortBy('status')">Status <i class="fas fa-sort sort-icon"></i></th>
-                            <th class="sortable" id="th-printed" onclick="sortBy('printed')">Printed <i class="fas fa-sort sort-icon"></i></th>
+                            <th class="sortable" id="th-id" onclick="sortBy('id')">Number <i class="fas fa-sort sort-icon"></i><span class="col-sublabel">Container</span></th>
+                            <th class="sortable" id="th-status" onclick="sortBy('status')">Status <i class="fas fa-sort sort-icon"></i><span class="col-sublabel">Container</span></th>
+                            <th class="sortable" id="th-type" onclick="sortBy('type')">Type <i class="fas fa-sort sort-icon"></i><span class="col-sublabel">Container</span></th>
+                            <th class="sortable" id="th-location" onclick="sortBy('location')">Location - Number <i class="fas fa-sort sort-icon"></i><span class="col-sublabel"><i class="fas fa-level-up-alt" style="transform:rotate(90deg);font-size:.55rem;"></i> Location</span></th>
+                            <th class="sortable" id="th-printed" onclick="sortBy('printed')">Printed <i class="fas fa-sort sort-icon"></i><span class="col-sublabel">Container</span></th>
                         </tr>
                     </thead>
                     <tbody id="containers-tbody"></tbody>
                 </table>
                 <div class="table-footer">
-                    <span>1 – 12 of 12</span>
+                    <span>1 – 6 of 6</span>
                     <div class="page-nav">
                         <button disabled><i class="fas fa-chevron-left"></i></button>
                         <button disabled><i class="fas fa-chevron-right"></i></button>
@@ -497,77 +566,217 @@
             </div>
 
         </div>
+        </div><!-- end #trip-screen -->
+
+        <!-- ── Container Overview Screen ── -->
+        <div id="container-screen" style="display:none;">
+
+            <!-- Page chrome -->
+            <div class="page-chrome">
+                <div class="breadcrumb">
+                    <a href="#" onclick="navigateToTrip(); return false;">Trip Management</a> ›
+                    <a href="#" onclick="navigateToTrip(); return false;">20261113101445</a> ›
+                    <span id="cov-breadcrumb-id"></span>
+                </div>
+                <div class="page-title-row">
+                    <i class="fas fa-chevron-left" style="color:#9090a8;font-size:.8rem;cursor:pointer;" onclick="navigateToTrip()"></i>
+                    <span class="page-title" id="cov-title"></span>
+                    <span class="page-title-meta" id="cov-title-meta"></span>
+                    <div class="page-chrome-actions">
+                        <button class="btn btn-secondary btn-sm"><i class="fas fa-ellipsis-h"></i> Actions</button>
+                        <button class="btn btn-primary btn-sm"><i class="fas fa-save"></i> Save</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Container Overview fields -->
+            <div class="trip-overview">
+                <div class="trip-overview-title">Container Overview</div>
+                <div class="fields-grid">
+                    <div class="field-block"><span class="field-label">Number</span><span class="field-value" id="cov-number"></span></div>
+                    <div class="field-block"><span class="field-label">Type</span><span class="field-value" id="cov-type"></span></div>
+                    <div class="field-block"><span class="field-label">Status</span><span class="field-value" id="cov-status"></span></div>
+                    <div class="field-block"><span class="field-label">LPN / SSCC</span><span class="field-value" id="cov-lpn" style="font-family:'Courier New',monospace;font-size:.75rem;"></span></div>
+                    <div class="field-block"><span class="field-label">Order</span><span class="field-value" id="cov-order" style="color:#f08020;font-weight:600;"></span></div>
+                    <div class="field-block"><span class="field-label">Trading Partner</span><span class="field-value" id="cov-tp"></span></div>
+                </div>
+            </div>
+
+            <!-- Container tabs -->
+            <div class="tabs-bar">
+                <div class="tab" data-tab="orders" onclick="switchContainerTab(this)">Orders</div>
+                <div class="tab" data-tab="shipments" onclick="switchContainerTab(this)">Shipments</div>
+                <div class="tab" data-tab="shipped" onclick="switchContainerTab(this)">Shipped Containers</div>
+                <div class="tab active" id="ctab-inner" data-tab="inner" onclick="switchContainerTab(this)">Inner Containers</div>
+            </div>
+
+            <!-- Inner Containers tab -->
+            <div class="content-area" id="cov-tab-inner">
+                <div class="table-toolbar">
+                    <div class="toolbar-left">
+                        <button class="btn btn-secondary btn-sm"><i class="fas fa-sliders-h"></i> Defaults</button>
+                        <div class="icon-btn"><i class="fas fa-cog"></i></div>
+                        <div class="toolbar-divider"></div>
+                        <button class="btn btn-ghost btn-sm"><i class="fas fa-filter"></i> Filter</button>
+                        <button class="btn btn-ghost btn-sm"><i class="fas fa-sort"></i> Sort</button>
+                        <div class="toolbar-divider"></div>
+                        <span class="selection-count" id="cov-sel-count" style="display:none;"></span>
+                        <div class="actions-wrap" id="cov-actions-wrap" style="display:none;">
+                            <button class="btn-actions" id="cov-btn-actions" onclick="toggleCovActionsMenu(event)">
+                                Actions <i class="fas fa-chevron-down chevron"></i>
+                            </button>
+                            <div class="actions-dropdown" id="cov-actions-dropdown">
+                                <div class="actions-dropdown-section">Actions</div>
+                                <div class="actions-dropdown-item" onclick="openCovPrintModal()">
+                                    <i class="fas fa-print"></i> Print Label
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="toolbar-right">
+                        <button class="btn btn-ghost btn-sm"><i class="fas fa-th"></i> Configure</button>
+                        <span style="font-size:.72rem;color:#9090a8;margin-left:.25rem;" id="cov-pagination-text"></span>
+                        <div class="page-nav">
+                            <button disabled><i class="fas fa-chevron-left"></i></button>
+                            <button disabled><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="col-check"><input type="checkbox" id="cov-select-all" onchange="toggleCovSelectAll(this)"></th>
+                                <th class="sortable" id="cov-th-lpn" onclick="covSortBy('lpn')">Number <i class="fas fa-sort sort-icon"></i></th>
+                                <th class="sortable" id="cov-th-printed" onclick="covSortBy('printed')">Printed <i class="fas fa-sort sort-icon"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody id="cov-tbody"></tbody>
+                    </table>
+                    <div class="table-footer">
+                        <span id="cov-pagination-footer"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stub tabs -->
+            <div class="content-area" id="cov-tab-orders" style="display:none;">
+                <div style="padding:3rem;text-align:center;color:#9090a8;font-size:.82rem;">No orders data to display.</div>
+            </div>
+            <div class="content-area" id="cov-tab-shipments" style="display:none;">
+                <div style="padding:3rem;text-align:center;color:#9090a8;font-size:.82rem;">No shipments data to display.</div>
+            </div>
+            <div class="content-area" id="cov-tab-shipped" style="display:none;">
+                <div style="padding:3rem;text-align:center;color:#9090a8;font-size:.82rem;">No shipped containers data to display.</div>
+            </div>
+
+        </div><!-- end #container-screen -->
+
     </div>
 </div>
 
-<!-- ── Print Labels Modal ── -->
-<div class="modal-overlay" id="print-modal">
-    <div class="modal">
+<!-- ── Inner Containers Modal ── -->
+<div class="modal-overlay" id="inner-modal">
+    <div class="modal" style="width:600px;">
         <div class="modal-header">
             <i class="fas fa-print" style="color:#f08020;"></i>
-            <h2>Print SSCC Labels</h2>
-            <button class="modal-close" onclick="closePrintModal()"><i class="fas fa-times"></i></button>
+            <h2>Print Pallet SSCC Labels</h2>
+            <button class="modal-close" onclick="closeInnerModal()"><i class="fas fa-times"></i></button>
         </div>
 
         <!-- Default view -->
-        <div id="modal-default">
+        <div id="inner-modal-default">
             <div class="modal-body">
-                <div class="print-summary" id="modal-summary">
-                    <i class="fas fa-info-circle"></i>
-                    <div class="print-summary-text" id="modal-summary-text"></div>
-                </div>
-
                 <div class="form-row">
-                    <span class="form-label">Printer</span>
-                    <select class="form-control" id="printer-select">
-                        <option value="dock-a">Label Printer 01 — Shipping Dock A</option>
-                        <option value="dock-b">Label Printer 02 — Shipping Dock B</option>
-                        <option value="warehouse">Label Printer 03 — Warehouse Floor</option>
-                        <option value="office">Label Printer 04 — Shipping Office</option>
+                    <span class="form-label">Printer Resource</span>
+                    <select class="form-control" id="inner-printer-select">
+                        <option value="dock-a">Shipping Dock A — Label Printer 01</option>
+                        <option value="dock-b">Shipping Dock B — Label Printer 02</option>
+                        <option value="warehouse">Warehouse Floor — Label Printer 03</option>
+                        <option value="office">Shipping Office — Label Printer 04</option>
                     </select>
                 </div>
-
-                <div class="print-options" id="print-options-section">
-                    <div class="print-option" id="opt-all" onclick="executePrint('all')">
-                        <div class="print-option-left">
-                            <span class="print-option-title">Print All Unprinted</span>
-                            <span class="print-option-desc">Print labels for all containers that have not yet been printed</span>
-                        </div>
-                        <span class="print-option-count" id="opt-all-count"></span>
-                    </div>
-                    <div class="print-option" id="opt-selected" onclick="executePrint('selected')">
-                        <div class="print-option-left">
-                            <span class="print-option-title">Print Selected</span>
-                            <span class="print-option-desc">Print labels for the containers you have selected in the table</span>
-                        </div>
-                        <span class="print-option-count" id="opt-selected-count"></span>
-                    </div>
-                    <div class="print-option" id="opt-reprint-all" onclick="executePrint('reprint-all')">
-                        <div class="print-option-left">
-                            <span class="print-option-title">Print All</span>
-                            <span class="print-option-desc">Print labels for all containers on this trip, including already-printed ones</span>
-                        </div>
-                        <span class="print-option-count" id="opt-reprint-all-count"></span>
+                <div class="form-row" style="flex-direction:column; align-items:flex-start; gap:8px;">
+                    <span class="form-label">Labels to Print</span>
+                    <div class="print-scope-tiles">
+                        <label class="print-scope-tile selected" id="scope-tile-pallet" onclick="selectPrintScope('pallet')">
+                            <input type="radio" name="inner-scope" value="pallet" checked>
+                            <div class="print-scope-icon"><i class="fas fa-pallet"></i></div>
+                            <div class="print-scope-label">Pallet Labels Only</div>
+                            <div class="print-scope-desc">One label per selected pallet</div>
+                        </label>
+                        <label class="print-scope-tile" id="scope-tile-inner" onclick="selectPrintScope('inner')">
+                            <input type="radio" name="inner-scope" value="inner">
+                            <div class="print-scope-icon"><i class="fas fa-boxes"></i></div>
+                            <div class="print-scope-label">Inner Container Labels</div>
+                            <div class="print-scope-desc">All cases for selected pallets</div>
+                        </label>
+                        <label class="print-scope-tile" id="scope-tile-both" onclick="selectPrintScope('both')">
+                            <input type="radio" name="inner-scope" value="both">
+                            <div class="print-scope-icon"><i class="fas fa-layer-group"></i></div>
+                            <div class="print-scope-label">Both</div>
+                            <div class="print-scope-desc">Pallet + all inner container labels</div>
+                        </label>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closePrintModal()">Cancel</button>
-                <button class="btn btn-primary" id="reprint-confirm-btn" onclick="executePrint('selected')" style="display:none;"></button>
+                <button class="btn btn-secondary" onclick="closeInnerModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="executeInnerPrint()">Print</button>
             </div>
         </div>
 
         <!-- Success view -->
-        <div id="modal-success" style="display:none;">
+        <div id="inner-modal-success" style="display:none;">
             <div class="modal-body">
                 <div class="print-success">
                     <i class="fas fa-check-circle"></i>
-                    <h3 id="success-title">Labels sent to printer</h3>
-                    <p id="success-desc"></p>
+                    <h3 id="inner-success-title">Labels sent to printer</h3>
+                    <p id="inner-success-desc"></p>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary" onclick="closePrintModal()">Done</button>
+                <button class="btn btn-primary" onclick="closeInnerModal()">Done</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── Container-level Print Modal ── -->
+<div class="modal-overlay" id="cov-print-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <i class="fas fa-print" style="color:#f08020;"></i>
+            <h2>Print Container SSCC Labels</h2>
+            <button class="modal-close" onclick="closeCovPrintModal()"><i class="fas fa-times"></i></button>
+        </div>
+        <div id="cov-modal-default">
+            <div class="modal-body">
+                <div class="form-row">
+                    <span class="form-label">Printer Resource</span>
+                    <select class="form-control" id="cov-printer-select">
+                        <option value="dock-a">Shipping Dock A — Label Printer 01</option>
+                        <option value="dock-b">Shipping Dock B — Label Printer 02</option>
+                        <option value="warehouse">Warehouse Floor — Label Printer 03</option>
+                        <option value="office">Shipping Office — Label Printer 04</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeCovPrintModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="executeCovPrint('selected')">Print</button>
+            </div>
+        </div>
+        <div id="cov-modal-success" style="display:none;">
+            <div class="modal-body">
+                <div class="print-success">
+                    <i class="fas fa-check-circle"></i>
+                    <h3 id="cov-success-title"></h3>
+                    <p id="cov-success-desc"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closeCovPrintModal()">Done</button>
             </div>
         </div>
     </div>
@@ -582,18 +791,55 @@
 <script>
     // ── Data ──────────────────────────────────────────────────────────────
     const containers = [
-        { id: 'CTN-00010177', lpn: '003456789000000177', order: 'ORD-2047', tp: 'Target', type: 'Case', status: 'Picking', printed: true },
-        { id: 'CTN-00010160', lpn: '003456789000000160', order: 'ORD-2047', tp: 'Target', type: 'Case', status: 'Picking', printed: true },
-        { id: 'CTN-00010153', lpn: '003456789000000153', order: 'ORD-2047', tp: 'Target', type: 'Case', status: 'Picking', printed: false },
-        { id: 'CTN-00010146', lpn: '003456789000000146', order: 'ORD-2047', tp: 'Target', type: 'Case', status: 'Picking', printed: false },
-        { id: 'CTN-00010139', lpn: '003456789000000139', order: 'ORD-2047', tp: 'Target', type: 'Case', status: 'Picking', printed: true },
-        { id: 'CTN-00010122', lpn: '003456789000000122', order: 'ORD-2047', tp: 'Target', type: 'Case', status: 'Picking', printed: true },
-        { id: 'CTN-00010115', lpn: '003456789000000115', order: 'ORD-2048', tp: 'Walmart', type: 'Case', status: 'Picking', printed: false },
-        { id: 'CTN-00010108', lpn: '003456789000000108', order: 'ORD-2048', tp: 'Walmart', type: 'Case', status: 'Picking', printed: false },
-        { id: 'CTN-00010092', lpn: '003456789000000092', order: 'ORD-2048', tp: 'Walmart', type: 'Case', status: 'Picking', printed: true },
-        { id: 'CTN-00010085', lpn: '003456789000000085', order: 'ORD-2048', tp: 'Walmart', type: 'Case', status: 'Picking', printed: true },
-        { id: 'CTN-00010078', lpn: '003456789000000078', order: 'ORD-2049', tp: 'Target', type: 'Pallet', status: 'Picking', printed: false },
-        { id: 'CTN-00010071', lpn: '003456789000000071', order: 'ORD-2049', tp: 'Target', type: 'Case', status: 'Picking', printed: true },
+        {
+            id: 'PLT-00000013', lpn: '003456789000000013', order: 'ORD-2047', tp: 'Target', type: 'Pallet', status: 'Picking', location: 'Shipping',
+            innerContainers: [
+                { id: 'CTN-00010101', lpn: '003456789000010101', printed: true },
+                { id: 'CTN-00010102', lpn: '003456789000010102', printed: true },
+                { id: 'CTN-00010103', lpn: '003456789000010103', printed: true },
+            ]
+        },
+        {
+            id: 'PLT-00000020', lpn: '003456789000000020', order: 'ORD-2047', tp: 'Target', type: 'Pallet', status: 'Picking', location: 'Shipping',
+            innerContainers: [
+                { id: 'CTN-00010201', lpn: '003456789000010201', printed: true },
+                { id: 'CTN-00010202', lpn: '003456789000010202', printed: true },
+                { id: 'CTN-00010203', lpn: '003456789000010203', printed: false },
+                { id: 'CTN-00010204', lpn: '003456789000010204', printed: false },
+            ]
+        },
+        {
+            id: 'PLT-00000027', lpn: '003456789000000027', order: 'ORD-2047', tp: 'Target', type: 'Pallet', status: 'Picking', location: 'Dock A',
+            innerContainers: [
+                { id: 'CTN-00010301', lpn: '003456789000010301', printed: false },
+                { id: 'CTN-00010302', lpn: '003456789000010302', printed: false },
+                { id: 'CTN-00010303', lpn: '003456789000010303', printed: false },
+            ]
+        },
+        {
+            id: 'PLT-00000034', lpn: '003456789000000034', order: 'ORD-2048', tp: 'Walmart', type: 'Pallet', status: 'Picking', location: 'Dock B',
+            innerContainers: [
+                { id: 'CTN-00010401', lpn: '003456789000010401', printed: false },
+                { id: 'CTN-00010402', lpn: '003456789000010402', printed: false },
+                { id: 'CTN-00010403', lpn: '003456789000010403', printed: false },
+                { id: 'CTN-00010404', lpn: '003456789000010404', printed: false },
+            ]
+        },
+        {
+            id: 'PLT-00000041', lpn: '003456789000000041', order: 'ORD-2048', tp: 'Walmart', type: 'Pallet', status: 'Picking', location: 'Shipping',
+            innerContainers: [
+                { id: 'CTN-00010501', lpn: '003456789000010501', printed: true },
+                { id: 'CTN-00010502', lpn: '003456789000010502', printed: true },
+                { id: 'CTN-00010503', lpn: '003456789000010503', printed: true },
+            ]
+        },
+        {
+            id: 'PLT-00000048', lpn: '003456789000000048', order: 'ORD-2049', tp: 'Target', type: 'Pallet', status: 'Picking', location: 'Dock A',
+            innerContainers: [
+                { id: 'CTN-00010601', lpn: '003456789000010601', printed: false },
+                { id: 'CTN-00010602', lpn: '003456789000010602', printed: false },
+            ]
+        },
     ];
 
     let selected = new Set();
@@ -607,14 +853,26 @@
         renderTable();
     }
 
+    function printedSortValue(c) {
+        const total = c.innerContainers.length;
+        return total > 0 ? c.innerContainers.filter(ic => ic.printed).length / total : 0;
+    }
+
+    function printedBadge(c) {
+        const total = c.innerContainers.length;
+        const cnt = c.innerContainers.filter(ic => ic.printed).length;
+        if (cnt === total) return `<span class="badge badge-print-all"><i class="fas fa-check-circle"></i> All Printed</span>`;
+        if (cnt === 0)     return `<span class="badge badge-print-none">Not Printed</span>`;
+        return `<span class="badge badge-print-partial">${cnt} of ${total} Printed</span>`;
+    }
+
     function getSortedIndices() {
         const indices = containers.map((_, i) => i);
         if (!sortState.col) return indices;
         const { col, dir } = sortState;
         return indices.sort((a, b) => {
-            let va = containers[a][col];
-            let vb = containers[b][col];
-            if (typeof va === 'boolean') { va = va ? 1 : 0; vb = vb ? 1 : 0; }
+            let va = col === 'printed' ? printedSortValue(containers[a]) : containers[a][col];
+            let vb = col === 'printed' ? printedSortValue(containers[b]) : containers[b][col];
             if (va < vb) return dir === 'asc' ? -1 : 1;
             if (va > vb) return dir === 'asc' ? 1 : -1;
             return 0;
@@ -622,7 +880,7 @@
     }
 
     function updateSortHeaders() {
-        ['id','lpn','order','tp','type','status','printed'].forEach(col => {
+        ['id','status','type','location','printed'].forEach(col => {
             const th = document.getElementById(`th-${col}`);
             if (!th) return;
             th.classList.remove('sort-asc', 'sort-desc');
@@ -650,18 +908,11 @@
                 <td class="col-check">
                     <input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleRow(${i}, this)">
                 </td>
-                <td class="col-id"><a href="#">${c.id}</a></td>
-                <td class="col-lpn">${c.lpn}</td>
-                <td class="col-order"><a href="#">${c.order}</a></td>
-                <td>${c.tp}</td>
-                <td>${c.type}</td>
+                <td class="col-id"><a href="#" onclick="navigateToContainer(${i}); return false;">${c.id}</a></td>
                 <td><span class="badge badge-picking">${c.status}</span></td>
-                <td>
-                    ${c.printed
-                        ? '<input type="checkbox" checked disabled style="width:16px;height:16px;accent-color:#f08020;cursor:default;">'
-                        : '<input type="checkbox" disabled style="width:16px;height:16px;cursor:default;">'
-                    }
-                </td>
+                <td><span class="badge badge-type">${c.type}</span></td>
+                <td>${c.location}</td>
+                <td class="col-check"><input type="checkbox" ${c.innerContainers.every(ic => ic.printed) ? 'checked' : ''} disabled style="width:14px;height:14px;accent-color:#f08020;cursor:default;"></td>
             `;
             tbody.appendChild(tr);
         });
@@ -701,77 +952,140 @@
         updateActionsMenu();
     }
 
-    // ── Print modal ───────────────────────────────────────────────────────
-    function openPrintModal(mode = 'full') {
-        const unprinted = containers.filter(c => !c.printed).length;
-        const selCount = selected.size;
-        const isReprint = mode === 'reprint';
+    // ── Inner containers modal ────────────────────────────────────────────
+    let innerSelected = new Set();
+    let innerModalPallets = [];
 
-        // Summary row — hidden in reprint mode
-        document.getElementById('modal-summary').style.display = isReprint ? 'none' : '';
-        if (!isReprint) {
-            const summaryEl = document.getElementById('modal-summary-text');
-            if (unprinted === 0) {
-                summaryEl.innerHTML = `All <strong>${containers.length}</strong> SSCC labels have been printed. You can reprint individual labels or reprint all.`;
-            } else {
-                summaryEl.innerHTML = `<strong>${unprinted}</strong> of ${containers.length} SSCC labels have not yet been printed.`;
+    let innerPrintScope = 'pallet';
+
+    function selectPrintScope(scope) {
+        innerPrintScope = scope;
+        ['inner', 'pallet', 'both'].forEach(s => {
+            const tile = document.getElementById(`scope-tile-${s}`);
+            if (tile) tile.classList.toggle('selected', s === scope);
+        });
+    }
+
+    function openInnerModal() {
+        innerModalPallets = [...selected];
+        innerPrintScope = 'pallet';
+        ['inner', 'pallet', 'both'].forEach(s => {
+            const tile = document.getElementById(`scope-tile-${s}`);
+            if (tile) tile.classList.toggle('selected', s === 'pallet');
+        });
+        document.getElementById('inner-modal-default').style.display = '';
+        document.getElementById('inner-modal-success').style.display = 'none';
+        document.getElementById('inner-modal').classList.add('open');
+    }
+
+    function closeInnerModal() {
+        document.getElementById('inner-modal').classList.remove('open');
+    }
+
+    function renderInnerContext() {
+        const el = document.getElementById('inner-context');
+        el.innerHTML = innerModalPallets.map(i => {
+            const c = containers[i];
+            return `<span class="context-chip"><i class="fas fa-pallet"></i> ${c.id}</span>`
+                 + `<span class="context-chip"><i class="fas fa-box"></i> ${c.order}</span>`
+                 + `<span class="context-chip">${c.tp}</span>`;
+        }).join(innerModalPallets.length > 1 ? '<span style="width:100%;height:0;"></span>' : '');
+    }
+
+    function renderInnerTable() {
+        const tbody = document.getElementById('inner-tbody');
+        tbody.innerHTML = '';
+        innerModalPallets.forEach(palletIdx => {
+            const pallet = containers[palletIdx];
+            if (innerModalPallets.length > 1) {
+                const gr = document.createElement('tr');
+                gr.className = 'inner-group-row';
+                gr.innerHTML = `<td colspan="4"><span class="inner-group-label"><i class="fas fa-pallet"></i> ${pallet.id} &nbsp;·&nbsp; ${pallet.order} &nbsp;·&nbsp; ${pallet.tp}</span></td>`;
+                tbody.appendChild(gr);
             }
-        }
-
-        // Print options — hidden in reprint mode
-        document.getElementById('print-options-section').style.display = isReprint ? 'none' : '';
-        if (!isReprint) {
-            document.getElementById('opt-all-count').textContent = unprinted > 0 ? `${unprinted} labels` : '—';
-            document.getElementById('opt-selected-count').textContent = selCount > 0 ? `${selCount} labels` : '—';
-            document.getElementById('opt-reprint-all-count').textContent = `${containers.length} labels`;
-            document.getElementById('opt-all').classList.toggle('disabled', unprinted === 0);
-            document.getElementById('opt-selected').classList.toggle('disabled', selCount === 0);
-        }
-
-        // Reprint confirm button — shown only in reprint mode
-        const reprintBtn = document.getElementById('reprint-confirm-btn');
-        reprintBtn.style.display = isReprint ? '' : 'none';
-        if (isReprint) {
-            reprintBtn.textContent = `Print ${selCount} Selected Label${selCount !== 1 ? 's' : ''}`;
-        }
-
-        // Reset to default view
-        document.getElementById('modal-default').style.display = '';
-        document.getElementById('modal-success').style.display = 'none';
-
-        document.getElementById('print-modal').classList.add('open');
+            pallet.innerContainers.forEach((ic, innerIdx) => {
+                const key = `${palletIdx}-${innerIdx}`;
+                const isSel = innerSelected.has(key);
+                const tr = document.createElement('tr');
+                if (isSel) tr.classList.add('selected');
+                tr.innerHTML = `
+                    <td class="col-check"><input type="checkbox" ${isSel ? 'checked' : ''} onchange="toggleInnerRow('${key}', this)"></td>
+                    <td class="col-id"><a href="#">${ic.id}</a></td>
+                    <td class="col-lpn">${ic.lpn}</td>
+                    <td>${ic.printed
+                        ? '<span class="badge badge-printed"><i class="fas fa-check"></i> Printed</span>'
+                        : '<span class="badge badge-not-printed">Not Printed</span>'}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        });
+        updateInnerSelectAll();
     }
 
-    function closePrintModal() {
-        document.getElementById('print-modal').classList.remove('open');
+    function toggleInnerRow(key, cb) {
+        if (cb.checked) innerSelected.add(key); else innerSelected.delete(key);
+        renderInnerTable();
+        updateInnerButtons();
     }
 
-    function executePrint(mode) {
-        const optEl = document.getElementById(mode === 'all' ? 'opt-all' : mode === 'selected' ? 'opt-selected' : 'opt-reprint-all');
-        if (optEl.classList.contains('disabled')) return;
+    function toggleInnerSelectAll(cb) {
+        innerModalPallets.forEach(palletIdx => {
+            containers[palletIdx].innerContainers.forEach((_, innerIdx) => {
+                const key = `${palletIdx}-${innerIdx}`;
+                if (cb.checked) innerSelected.add(key); else innerSelected.delete(key);
+            });
+        });
+        renderInnerTable();
+        updateInnerButtons();
+    }
 
-        const printer = document.getElementById('printer-select').options[document.getElementById('printer-select').selectedIndex].text;
+    function updateInnerSelectAll() {
+        const total = innerModalPallets.reduce((s, i) => s + containers[i].innerContainers.length, 0);
+        const cb = document.getElementById('inner-select-all');
+        cb.checked = innerSelected.size === total && total > 0;
+        cb.indeterminate = innerSelected.size > 0 && innerSelected.size < total;
+    }
+
+    function updateInnerButtons() {
+        const totalUnprinted = innerModalPallets.reduce((s, i) =>
+            s + containers[i].innerContainers.filter(ic => !ic.printed).length, 0);
+
+        const unpBtn = document.getElementById('inner-btn-unprinted');
+        unpBtn.textContent = `Print All Unprinted${totalUnprinted > 0 ? ` (${totalUnprinted})` : ''}`;
+        unpBtn.disabled = totalUnprinted === 0;
+
+        const selBtn = document.getElementById('inner-btn-selected');
+        selBtn.textContent = `Print Selected${innerSelected.size > 0 ? ` (${innerSelected.size})` : ''}`;
+        selBtn.disabled = innerSelected.size === 0;
+
+        const countEl = document.getElementById('inner-sel-count');
+        countEl.style.display = innerSelected.size > 0 ? 'inline-flex' : 'none';
+        countEl.textContent = `${innerSelected.size} selected`;
+    }
+
+    function executeInnerPrint() {
+        const sel = document.getElementById('inner-printer-select');
+        const printerName = sel.options[sel.selectedIndex].text;
         let count = 0;
 
-        if (mode === 'all') {
-            containers.forEach(c => { if (!c.printed) { c.printed = true; count++; } });
-        } else if (mode === 'selected') {
-            selected.forEach(i => { containers[i].printed = true; count++; });
-            selected.clear();
-        } else {
-            count = containers.length;
-            containers.forEach(c => c.printed = true);
-        }
+        innerModalPallets.forEach(palletIdx => {
+            const c = containers[palletIdx];
+            if (innerPrintScope === 'pallet' || innerPrintScope === 'both') {
+                c.palletPrinted = true; count++;
+            }
+            if (innerPrintScope === 'inner' || innerPrintScope === 'both') {
+                c.innerContainers.forEach(ic => { ic.printed = true; count++; });
+            }
+        });
 
-        // Show success
-        document.getElementById('modal-default').style.display = 'none';
-        document.getElementById('modal-success').style.display = '';
-        document.getElementById('success-title').textContent = `${count} label${count !== 1 ? 's' : ''} sent to printer`;
-        document.getElementById('success-desc').textContent = `Sent to: ${printer}`;
+        document.getElementById('inner-modal-default').style.display = 'none';
+        document.getElementById('inner-modal-success').style.display = '';
+        document.getElementById('inner-success-title').textContent = `${count} label${count !== 1 ? 's' : ''} sent to printer`;
+        document.getElementById('inner-success-desc').textContent = `Sent to: ${printerName}`;
 
         renderTable();
         updateSelectionCount();
-        showToast(`${count} label${count !== 1 ? 's' : ''} sent to ${printer.split('—')[0].trim()}`);
+        showToast(`${count} label${count !== 1 ? 's' : ''} sent to ${printerName.split('—')[0].trim()}`);
     }
 
     // ── Toolbar Actions dropdown ───────────────────────────────────────────
@@ -785,28 +1099,212 @@
     }
 
     function updateActionsMenu() {
-        const reprintItem = document.getElementById('action-reprint');
-        reprintItem.classList.toggle('disabled', selected.size === 0);
+        document.getElementById('actions-wrap').style.display = selected.size > 0 ? '' : 'none';
     }
 
     function reprintSelected() {
         if (selected.size === 0) return;
         document.getElementById('actions-dropdown').classList.remove('open');
         document.getElementById('btn-actions').classList.remove('open');
-        openPrintModal('reprint');
+        openInnerModal();
     }
 
     document.addEventListener('click', () => {
         document.getElementById('actions-dropdown').classList.remove('open');
         document.getElementById('btn-actions').classList.remove('open');
+        document.getElementById('cov-actions-dropdown').classList.remove('open');
+        document.getElementById('cov-btn-actions').classList.remove('open');
     });
 
-    function reprintSingle(i) {
-        const c = containers[i];
-        const printer = 'Label Printer 01 — Shipping Dock A';
-        c.printed = true;
+    // ── Container Overview screen ─────────────────────────────────────────
+    let currentContainerIdx = null;
+    let covSelected = new Set();
+    let covSortState = { col: null, dir: 'asc' };
+
+    function navigateToContainer(idx) {
+        currentContainerIdx = idx;
+        covSelected = new Set();
+        const c = containers[idx];
+
+        document.getElementById('cov-breadcrumb-id').textContent = c.id;
+        document.getElementById('cov-title').textContent = c.id;
+        document.getElementById('cov-title-meta').textContent = `Updated: Nov 13, 2026 10:14`;
+        document.getElementById('cov-number').textContent = c.id;
+        document.getElementById('cov-type').textContent = c.type;
+        document.getElementById('cov-status').textContent = c.status;
+        document.getElementById('cov-lpn').textContent = c.lpn;
+        document.getElementById('cov-order').textContent = c.order;
+        document.getElementById('cov-tp').textContent = c.tp;
+
+        // Always open on Inner Containers tab
+        document.querySelectorAll('#container-screen .tab').forEach(t => t.classList.remove('active'));
+        document.getElementById('ctab-inner').classList.add('active');
+        showContainerTab('inner');
+
+        renderCovTable();
+
+        document.getElementById('trip-screen').style.display = 'none';
+        document.getElementById('container-screen').style.display = '';
+    }
+
+    function navigateToTrip() {
+        document.getElementById('trip-screen').style.display = '';
+        document.getElementById('container-screen').style.display = 'none';
+        currentContainerIdx = null;
+        covSelected = new Set();
+    }
+
+    function switchContainerTab(el) {
+        document.querySelectorAll('#container-screen .tab').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+        showContainerTab(el.dataset.tab);
+    }
+
+    function showContainerTab(name) {
+        ['inner', 'orders', 'shipments', 'shipped'].forEach(t => {
+            const el = document.getElementById(`cov-tab-${t}`);
+            if (el) el.style.display = t === name ? '' : 'none';
+        });
+    }
+
+    function renderCovTable() {
+        if (currentContainerIdx === null) return;
+        const c = containers[currentContainerIdx];
+        const tbody = document.getElementById('cov-tbody');
+        tbody.innerHTML = '';
+
+        let items = c.innerContainers.map((ic, idx) => ({ ic, idx }));
+        if (covSortState.col) {
+            items.sort((a, b) => {
+                let av = a.ic[covSortState.col];
+                let bv = b.ic[covSortState.col];
+                if (typeof av === 'boolean') { av = av ? 1 : 0; bv = bv ? 1 : 0; }
+                else { av = String(av).toLowerCase(); bv = String(bv).toLowerCase(); }
+                if (av < bv) return covSortState.dir === 'asc' ? -1 : 1;
+                if (av > bv) return covSortState.dir === 'asc' ? 1 : -1;
+                return 0;
+            });
+        }
+
+        items.forEach(({ ic, idx }) => {
+            const isSel = covSelected.has(idx);
+            const tr = document.createElement('tr');
+            if (isSel) tr.classList.add('selected');
+            tr.innerHTML = `
+                <td class="col-check"><input type="checkbox" ${isSel ? 'checked' : ''} onchange="toggleCovRow(${idx}, this)"></td>
+                <td class="col-id"><a href="#">${ic.lpn}</a></td>
+                <td class="col-check"><input type="checkbox" ${ic.printed ? 'checked' : ''} disabled style="width:14px;height:14px;accent-color:#f08020;cursor:default;"></td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        const total = c.innerContainers.length;
+        const pag = `1 – ${total} of ${total}`;
+        document.getElementById('cov-pagination-text').textContent = pag;
+        document.getElementById('cov-pagination-footer').textContent = pag;
+        updateCovSelectAll();
+        updateCovActions();
+        updateCovSortHeaders();
+    }
+
+    function covSortBy(col) {
+        if (covSortState.col === col) {
+            covSortState.dir = covSortState.dir === 'asc' ? 'desc' : 'asc';
+        } else {
+            covSortState.col = col;
+            covSortState.dir = 'asc';
+        }
+        renderCovTable();
+    }
+
+    function updateCovSortHeaders() {
+        ['lpn', 'printed'].forEach(col => {
+            const th = document.getElementById(`cov-th-${col}`);
+            if (!th) return;
+            const icon = th.querySelector('.sort-icon');
+            if (!icon) return;
+            if (covSortState.col === col) {
+                icon.className = `fas fa-sort-${covSortState.dir === 'asc' ? 'up' : 'down'} sort-icon`;
+                th.classList.add('sorted');
+            } else {
+                icon.className = 'fas fa-sort sort-icon';
+                th.classList.remove('sorted');
+            }
+        });
+    }
+
+    function toggleCovRow(idx, cb) {
+        if (cb.checked) covSelected.add(idx); else covSelected.delete(idx);
+        renderCovTable();
+    }
+
+    function toggleCovSelectAll(cb) {
+        const c = containers[currentContainerIdx];
+        c.innerContainers.forEach((_, idx) => {
+            if (cb.checked) covSelected.add(idx); else covSelected.delete(idx);
+        });
+        renderCovTable();
+    }
+
+    function updateCovSelectAll() {
+        if (currentContainerIdx === null) return;
+        const total = containers[currentContainerIdx].innerContainers.length;
+        const cb = document.getElementById('cov-select-all');
+        cb.checked = covSelected.size === total && total > 0;
+        cb.indeterminate = covSelected.size > 0 && covSelected.size < total;
+    }
+
+    function updateCovActions() {
+        const show = covSelected.size > 0;
+        document.getElementById('cov-sel-count').style.display = show ? 'inline-flex' : 'none';
+        document.getElementById('cov-sel-count').textContent = `${covSelected.size} selected`;
+        document.getElementById('cov-actions-wrap').style.display = show ? '' : 'none';
+    }
+
+    function toggleCovActionsMenu(event) {
+        event.stopPropagation();
+        const dropdown = document.getElementById('cov-actions-dropdown');
+        const btn = document.getElementById('cov-btn-actions');
+        const isOpen = dropdown.classList.contains('open');
+        dropdown.classList.toggle('open', !isOpen);
+        btn.classList.toggle('open', !isOpen);
+    }
+
+    function openCovPrintModal() {
+        document.getElementById('cov-actions-dropdown').classList.remove('open');
+        document.getElementById('cov-btn-actions').classList.remove('open');
+        if (currentContainerIdx === null) return;
+        document.getElementById('cov-modal-default').style.display = '';
+        document.getElementById('cov-modal-success').style.display = 'none';
+        document.getElementById('cov-print-modal').classList.add('open');
+    }
+
+    function closeCovPrintModal() {
+        document.getElementById('cov-print-modal').classList.remove('open');
+    }
+
+    function executeCovPrint(mode) {
+        if (currentContainerIdx === null) return;
+        const c = containers[currentContainerIdx];
+        const sel = document.getElementById('cov-printer-select');
+        const printerName = sel.options[sel.selectedIndex].text;
+        let count = 0;
+
+        if (mode === 'unprinted') {
+            c.innerContainers.forEach(ic => { if (!ic.printed) { ic.printed = true; count++; } });
+        } else {
+            covSelected.forEach(idx => { c.innerContainers[idx].printed = true; count++; });
+            covSelected.clear();
+        }
+
+        document.getElementById('cov-modal-default').style.display = 'none';
+        document.getElementById('cov-modal-success').style.display = '';
+        document.getElementById('cov-success-title').textContent = `${count} label${count !== 1 ? 's' : ''} sent to printer`;
+        document.getElementById('cov-success-desc').textContent = `Sent to: ${printerName}`;
+
+        renderCovTable();
         renderTable();
-        showToast(`Printed label for ${c.id}`);
+        showToast(`${count} label${count !== 1 ? 's' : ''} sent to ${printerName.split('—')[0].trim()}`);
     }
 
     // ── Toast ─────────────────────────────────────────────────────────────
